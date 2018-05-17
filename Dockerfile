@@ -99,10 +99,15 @@ RUN git clone https://github.com/nemtech/catapult-server.git -b master --depth 1
 # ここから先は作業用に都合よくやっている
 # 行儀が良いとは思ってないよ
 
-RUN cd catapult-server/_build \
+COPY patch/config-user.patch .
+RUN cd catapult-server \
+  && patch -p1 < /tmp/config-user.patch \
+  && mkdir -p seed/mijin-test \
   && mkdir data \
-  && mkdir -p ../seed/mijin-test \
-  && mv resources resources.bk \
-  && cp -r ../resources .
+  && cd _build
+  # && ./bin/catapult.tools.nemgen ../tools/nemgen/resources/mijin-test.properties \
+  # && cp ../seed/mijin-test/00000/00001.dat ../data/00000/
+  # && mv resources resources.bk \
+  # && cp -r ../resources .
 
-WORKDIR catapult-server/_build/bin
+WORKDIR catapult-server/_build
